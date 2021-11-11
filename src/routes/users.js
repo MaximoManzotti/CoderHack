@@ -96,8 +96,6 @@ router.delete("/delete/:email",checkAdmin, checkAuth, async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: "Delete failed" });
-  }
+  } 
 });
-
-
 module.exports = router;
