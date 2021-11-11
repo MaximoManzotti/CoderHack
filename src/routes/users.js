@@ -85,6 +85,17 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-
+router.delete("/delete/:email",checkAdmin, checkAuth, async (req, res) => {
+  try {
+    const data = req.params.email
+    const removedUser = await User.destroy({ where: { email: data } });
+    if (!removedUser) {
+      return res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json({ message: "User Deleted!" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Delete failed" });
+  } 
+});
 module.exports = router;
