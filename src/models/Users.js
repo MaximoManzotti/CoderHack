@@ -18,6 +18,10 @@ const User = db.define('Users', {
     type: Sequelize.STRING,
     allowNull: false,
   },
+   birthday: {
+    type: Sequelize.DATEONLY,
+    allowNull: false,
+  },
   isAdmin: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
