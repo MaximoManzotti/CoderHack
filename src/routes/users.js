@@ -40,7 +40,7 @@ router.post("/login", async (req, res) => {
           client.set("token", token);
           client.set("email", email);
           client.set("id", user.id);
-
+          client.set("businessman", user.businessman)
           res.status(200).json({ message: user });
         } else {
           res.status(400).json({ error: "User or Password are incorrect" });
