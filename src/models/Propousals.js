@@ -11,14 +11,19 @@ const Propousals = db.define('Propousals', {
     allowNull: false,
   }, 
 idUser:{
-  type: Sequelize.STRING,
+  type: Sequelize.INTEGER,
     allowNull: false,
 },idComments:{
-  type: Sequelize.STRING,
+  type: Sequelize.INTEGER,
     allowNull: false,
 },
-  visble:{
-  type: Sequelize.BOOLEAN
+  visible:{
+  type: Sequelize.BOOLEAN,
+   defaultValue: 1,
+},idComments:{
+  type: Sequelize.INTEGER,
+    allowNull: true,
+  defaultValue: null,
 }
 },{
 timestamps:false
