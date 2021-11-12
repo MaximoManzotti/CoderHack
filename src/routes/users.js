@@ -39,6 +39,8 @@ router.post("/login", async (req, res) => {
           });
           client.set("token", token);
           client.set("email", email);
+          client.set("id", user.id);
+
           res.status(200).json({ message: user });
         } else {
           res.status(400).json({ error: "User or Password are incorrect" });
@@ -52,7 +54,7 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   const data = req.body;
-  let { name, lastName, email, password, birthday, businessman } = data;
+  let { name, lastName, email, password, businessman } = data;
 
   try {
     const emailAlreadyRegistered = await User.findAll({ where: { email } });
@@ -70,7 +72,6 @@ router.post("/register", async (req, res) => {
             name,
             lastName,
             email,
-            birthday,
             password: hash,
             businessman
           });
@@ -98,4 +99,5 @@ router.delete("/delete/:email",checkAdmin, checkAuth, async (req, res) => {
     res.status(500).json({ message: "Delete failed" });
   } 
 });
+
 module.exports = router;
