@@ -7,16 +7,17 @@ const checkAdmin = require("../middleware/Admin");
 const checkAuth = require("../middleware/Auth");
 const client = require("../middleware/Redis");
 
-
 router.get("/", checkAdmin, checkAuth, async (req, res) => {
   try {
     let user = await User.findAll();
-    console.log("Getting users");
-    res.status(200).json({ user });
+      console.log("Getting users");
+      res.status(200).json({ user });
+  
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
 
 router.post("/login", async (req, res) => {
   const email = req.body.email;
@@ -40,7 +41,7 @@ router.post("/login", async (req, res) => {
           client.set("token", token);
           client.set("email", email);
           client.set("id", user.id);
-          client.set("businessman", user.businessman)
+          client.set("businessman", user.businessman);
           res.status(200).json({ message: user });
         } else {
           res.status(400).json({ error: "User or Password are incorrect" });
@@ -60,7 +61,7 @@ router.post("/register", async (req, res) => {
     const emailAlreadyRegistered = await User.findAll({ where: { email } });
 
     if (emailAlreadyRegistered.length) {
-      res.status(409).json({ message: `Username in use, Please chose other` });
+      res.status(409).json({ message: `Email in use, Please chose other` });
     } else {
       bcrypt.hash(password, 10, async (err, hash) => {
         if (err) {
@@ -73,7 +74,7 @@ router.post("/register", async (req, res) => {
             lastName,
             email,
             password: hash,
-            businessman
+            businessman,
           });
           res.status(201).json({ message: "User created succesfully!" });
         }
@@ -86,9 +87,34 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.delete("/delete/:email",checkAdmin, checkAuth, async (req, res) => {
+router.patch("/suppress/:id", checkAuth, async (req, res) => {
+  const data = parseInt(req.params.id);
+  client.get("id", async (err, idUsuario) => {
+    try {
+      const removedUser = await User.findOne({
+        where: { id: data },
+      });
+
+      if (removedUser === null) {
+        return res.status(404).json({ message: "User not found" });
+      } else if (idUsuario != removedUser.id) {
+        res.status(401).json({ message: " Unauthorized " });
+      } else {
+        await User.update(
+          { openPropousal: false },
+          { where: { id: idUsuario } }
+        );
+        res.status(200).json({ message: "User Deleted!" });
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Delete failed" });
+    }
+  });
+});
+
+router.delete("/delete/:email", checkAdmin, checkAuth, async (req, res) => {
   try {
-    const data = req.params.email
+    const data = req.params.email;
     const removedUser = await User.destroy({ where: { email: data } });
     if (!removedUser) {
       return res.status(404).json({ message: "User not found" });
@@ -97,7 +123,7 @@ router.delete("/delete/:email",checkAdmin, checkAuth, async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: "Delete failed" });
-  } 
+  }
 });
 
 module.exports = router;

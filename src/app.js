@@ -34,7 +34,11 @@ const UserRoutes = require("./routes/users");
 app.use("/users", UserRoutes);
 
 
-const PropousalsRoustes = require("./routes/Propousals");
+const PropousalsRoustes = require("./routes/propousals");
 app.use("/propousals", PropousalsRoustes);
+
+const Comments = require("./routes/comments");
+app.use("/comments", Comments);
+
 
 

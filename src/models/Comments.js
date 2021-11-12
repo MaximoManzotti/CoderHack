@@ -11,7 +11,7 @@ const Comments = db.define("Comments",
       type: Sequelize.INTEGER,
       allowNull: false,
     },
- comment: {
+ comments: {
       type: Sequelize.STRING,
       allowNull: false,
     },

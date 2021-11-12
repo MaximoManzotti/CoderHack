@@ -2,9 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/Users");
 const Propousals = require("../models/Propousals");
-const JWT = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const checkAdmin = require("../middleware/Admin");
 const checkAuth = require("../middleware/Auth");
 const checkBusinessMan = require("../middleware/businessman");
 const client = require("../middleware/Redis");
@@ -58,7 +55,7 @@ router.post("/add", checkBusinessMan, checkAuth, (req, res) => {
   });
 });
 
-router.put("/suppress/:id", checkAuth, async (req, res) => {
+router.patch("/suppress/:id", checkAuth, async (req, res) => {
   const data = parseInt(req.params.id);
   client.get("id", async (err, idUsuario) => {
     try {
